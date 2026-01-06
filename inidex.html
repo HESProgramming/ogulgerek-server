@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Ogulgerek 🌹</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0f">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#0b0b0f;
+    color:#fff;
+}
+
+.scene{
+    position:absolute;
+    inset:0;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    padding:30px;
+    background:radial-gradient(circle at top,#1a001f,#050008 70%);
+    z-index:2;
+}
+.scene.active{display:flex;}
+
+h1{font-size:2.4rem;color:#ff5fa2;margin-bottom:20px;}
+p{font-size:1.3rem;color:#f5d6e6;max-width:650px;line-height:1.7;}
+
+button{
+    margin-top:30px;
+    padding:14px 40px;
+    border:none;
+    border-radius:40px;
+    font-size:1.1rem;
+    background:linear-gradient(135deg,#ff4d8d,#ff85b3);
+    cursor:pointer;
+}
+
+/* 🌱 ALT BAHÇE */
+.garden{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:35%;
+    pointer-events:none;
+    z-index:1;
+}
+
+/* 🌹 ÇİÇEK */
+.flower{
+    position:absolute;
+    bottom:-60px;
+    width:40px;
+    height:40px;
+    animation:grow 6s infinite ease-in-out;
+}
+
+.petal{
+    position:absolute;
+    width:18px;
+    height:18px;
+    background:radial-gradient(circle,#ff9ecf,#c3003a);
+    border-radius:50% 50% 50% 0;
+}
+
+.center{
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:#ffd6e8;
+    border-radius:50%;
+    top:15px;
+    left:15px;
+}
+
+@keyframes grow{
+    0%{transform:translateY(0) scale(0);opacity:0;}
+    30%{opacity:1;}
+    100%{transform:translateY(-120px) scale(1);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="garden" id="garden"></div>
+
+<div class="scene active">
+    <h1>Ogulgerek 🌹</h1>
+    <p>Bu karanlık gecede kalbim sadece sana açıyor.</p>
+    <button onclick="next()">Devam</button>
+</div>
+
+<div class="scene">
+    <h1>Bir his…</h1>
+    <p>Sessiz ama derin, tıpkı gecede açan güller gibi.</p>
+    <button onclick="next()">Devam</button>
+</div>
+
+<div class="scene">
+    <h1>💗</h1>
+    <p>Kalbim seni seçti.</p>
+</div>
+
+<script>
+let i=0;
+const scenes=document.querySelectorAll(".scene");
+function next(){
+    scenes[i].classList.remove("active");
+    i++;
+    if(i<scenes.length) scenes[i].classList.add("active");
+}
+
+/* ALT ÇİÇEKLER */
+const garden=document.getElementById("garden");
+setInterval(()=>{
+    const f=document.createElement("div");
+    f.className="flower";
+    f.style.left=Math.random()*100+"%";
+    for(let i=0;i<5;i++){
+        const p=document.createElement("div");
+        p.className="petal";
+        p.style.transform=`rotate(${i*72}deg) translate(12px)`;
+        f.appendChild(p);
+    }
+    const c=document.createElement("div");
+    c.className="center";
+    f.appendChild(c);
+    garden.appendChild(f);
+    setTimeout(()=>f.remove(),6000);
+},700);
+</script>
+
+</body>
+</html>
