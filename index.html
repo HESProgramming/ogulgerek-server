@@ -2,8 +2,14 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<title>Ogulgerek 🌸</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ogulgerek 🌹</title>
+
+<!-- TAM EKRAN / MOBİL -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
 <style>
 *{
     margin:0;
@@ -12,22 +18,25 @@
     font-family:'Segoe UI',sans-serif;
 }
 
-body{
-    background:radial-gradient(circle at bottom,#ffb6c1,#ff69b4,#8a2be2);
-    overflow:hidden;
-    color:white;
-}
-
-.scene{
-    position:absolute;
+html,body{
     width:100%;
     height:100%;
+    overflow:hidden;
+    background:#0b0b0f;
+    color:#fff;
+}
+
+/* SAHNELER */
+.scene{
+    position:absolute;
+    inset:0;
     display:none;
     justify-content:center;
     align-items:center;
     flex-direction:column;
     text-align:center;
-    padding:20px;
+    padding:30px;
+    background:radial-gradient(circle at top,#1a001f,#050008 70%);
 }
 
 .scene.active{
@@ -35,28 +44,31 @@ body{
 }
 
 h1{
-    font-size:2.5rem;
+    font-size:2.4rem;
     margin-bottom:20px;
-    animation:fadeIn 2s ease;
+    color:#ff5fa2;
+    text-shadow:0 0 20px rgba(255,95,162,.6);
+    animation:fade 2s ease;
 }
 
 p{
     font-size:1.3rem;
-    max-width:600px;
-    line-height:1.6;
-    animation:fadeIn 3s ease;
+    max-width:650px;
+    line-height:1.7;
+    color:#f5d6e6;
+    animation:fade 3s ease;
 }
 
 button{
-    margin-top:30px;
-    padding:15px 40px;
-    border:none;
-    border-radius:50px;
-    background:#fff;
-    color:#d63384;
+    margin-top:35px;
+    padding:15px 45px;
     font-size:1.2rem;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(135deg,#ff4d8d,#ff85b3);
+    color:#16000a;
     cursor:pointer;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
+    box-shadow:0 10px 30px rgba(255,77,141,.4);
     transition:.3s;
 }
 
@@ -64,122 +76,119 @@ button:hover{
     transform:scale(1.1);
 }
 
-/* ÇİÇEKLER */
-.flower{
+/* 3D GÜL */
+.rose{
     position:absolute;
-    width:60px;
-    height:60px;
-    animation:float 6s infinite ease-in-out;
+    width:70px;
+    height:70px;
     transform-style:preserve-3d;
+    animation:float 6s infinite ease-in-out;
 }
 
 .petal{
     position:absolute;
-    width:30px;
-    height:30px;
-    background:radial-gradient(circle,#fff,#ff69b4);
-    border-radius:50%;
+    width:40px;
+    height:40px;
+    background:radial-gradient(circle,#ff9ecf,#c3003a);
+    border-radius:50% 50% 50% 0;
+    transform-origin:center;
 }
 
 .center{
     position:absolute;
     width:20px;
     height:20px;
-    background:gold;
+    background:radial-gradient(circle,#ffd6e8,#ff4d8d);
     border-radius:50%;
-    top:20px;
-    left:20px;
+    top:25px;
+    left:25px;
 }
 
-/* PETAL DİZİLİMİ */
-.petal:nth-child(1){transform:rotateY(0deg) translateX(15px);}
-.petal:nth-child(2){transform:rotateY(60deg) translateX(15px);}
-.petal:nth-child(3){transform:rotateY(120deg) translateX(15px);}
-.petal:nth-child(4){transform:rotateY(180deg) translateX(15px);}
-.petal:nth-child(5){transform:rotateY(240deg) translateX(15px);}
-.petal:nth-child(6){transform:rotateY(300deg) translateX(15px);}
+/* PETAL AÇILARI */
+.petal:nth-child(1){transform:rotateY(0deg) translateZ(18px);}
+.petal:nth-child(2){transform:rotateY(60deg) translateZ(18px);}
+.petal:nth-child(3){transform:rotateY(120deg) translateZ(18px);}
+.petal:nth-child(4){transform:rotateY(180deg) translateZ(18px);}
+.petal:nth-child(5){transform:rotateY(240deg) translateZ(18px);}
+.petal:nth-child(6){transform:rotateY(300deg) translateZ(18px);}
 
 @keyframes float{
-    0%{transform:translateY(0) rotateZ(0deg);}
-    50%{transform:translateY(-40px) rotateZ(180deg);}
-    100%{transform:translateY(0) rotateZ(360deg);}
+    0%{transform:translateY(0) rotateX(0deg) rotateZ(0deg);}
+    50%{transform:translateY(-50px) rotateX(180deg) rotateZ(180deg);}
+    100%{transform:translateY(0) rotateX(360deg) rotateZ(360deg);}
 }
 
-@keyframes fadeIn{
+@keyframes fade{
     from{opacity:0; transform:translateY(30px);}
     to{opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
+
 <body>
 
-<!-- ÇİÇEKLER -->
+<!-- GÜLLER -->
 <script>
-for(let i=0;i<20;i++){
-    let f=document.createElement("div");
-    f.className="flower";
-    f.style.left=Math.random()*100+"%";
-    f.style.top=Math.random()*100+"%";
-    f.style.animationDuration=4+Math.random()*4+"s";
+for(let i=0;i<18;i++){
+    const r=document.createElement("div");
+    r.className="rose";
+    r.style.left=Math.random()*100+"%";
+    r.style.top=Math.random()*100+"%";
+    r.style.animationDuration=4+Math.random()*4+"s";
 
     for(let j=0;j<6;j++){
-        let p=document.createElement("div");
+        const p=document.createElement("div");
         p.className="petal";
-        f.appendChild(p);
+        r.appendChild(p);
     }
-    let c=document.createElement("div");
+    const c=document.createElement("div");
     c.className="center";
-    f.appendChild(c);
+    r.appendChild(c);
 
-    document.body.appendChild(f);
+    document.body.appendChild(r);
 }
 </script>
 
 <!-- SAHNELER -->
 <div class="scene active">
-    <h1>Merhaba Ogulgerek 🌸</h1>
-    <p>Bu küçük sayfa sana özel hazırlandı…</p>
-    <button onclick="next()">Devam et 💗</button>
+    <h1>Ogulgerek 🌹</h1>
+    <p>Bu karanlık gecede, kalbimde sadece sen varsın.</p>
+    <button onclick="next()">Devam et</button>
 </div>
 
 <div class="scene">
     <h1>Bir süredir…</h1>
-    <p>Sana baktığımda içimde açan çiçekleri fark ettim.</p>
-    <button onclick="next()">Biraz daha 🌷</button>
+    <p>Seni düşündüğümde içimde güller açıyor, sessiz ama derin.</p>
+    <button onclick="next()">Devam</button>
 </div>
 
 <div class="scene">
     <h1>Gerçek şu ki…</h1>
-    <p>Gülüşün, konuşman ve varlığın beni çok etkiliyor.</p>
-    <button onclick="next()">Devam 🌼</button>
+    <p>Gülüşün gecemi aydınlatan tek ışık gibi.</p>
+    <button onclick="next()">Devam</button>
 </div>
 
 <div class="scene">
-    <h1>Ogulgerek 💖</h1>
-    <p>
-        Ben senden hoşlanıyorum.<br>
-        Bunu kalbimden gelerek söylemek istedim.
-    </p>
-    <button onclick="next()">Son 🌹</button>
+    <h1>Ogulgerek 💗</h1>
+    <p>Ben senden hoşlanıyorum.<br>Kalbim bunu saklayamadı.</p>
+    <button onclick="next()">Son</button>
 </div>
 
 <div class="scene">
-    <h1>🌸</h1>
+    <h1>🌹</h1>
     <p>
-        Eğer istersen, bu hikâyeyi birlikte güzelleştirebiliriz.<br>
-        Kararına her zaman saygı duyarım.
+        Eğer istersen bu hikâyeyi birlikte yazabiliriz.<br>
+        İstemezsen bile, bu hislerim hep güzel kalacak.
     </p>
 </div>
 
 <script>
-let index=0;
-const scenes=document.querySelectorAll('.scene');
+let i=0;
+const s=document.querySelectorAll(".scene");
 function next(){
-    scenes[index].classList.remove('active');
-    index++;
-    if(index<scenes.length){
-        scenes[index].classList.add('active');
-    }
+    s[i].classList.remove("active");
+    i++;
+    if(i<s.length) s[i].classList.add("active");
 }
 </script>
 
