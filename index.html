@@ -6,16 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0b0b0f">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',sans-serif;}
 
 html,body{
     width:100%;
@@ -25,7 +18,6 @@ html,body{
     color:#fff;
 }
 
-/* SAHNELER */
 .scene{
     position:absolute;
     inset:0;
@@ -38,209 +30,115 @@ html,body{
     background:radial-gradient(circle at top,#1a001f,#050008 70%);
     z-index:2;
 }
-
 .scene.active{display:flex;}
 
-h1{
-    font-size:2.4rem;
-    margin-bottom:20px;
-    color:#ff5fa2;
-    text-shadow:0 0 20px rgba(255,95,162,.6);
-    animation:fade 2s ease;
-}
-
-p{
-    font-size:1.3rem;
-    max-width:650px;
-    line-height:1.7;
-    color:#f5d6e6;
-    animation:fade 3s ease;
-}
+h1{font-size:2.4rem;color:#ff5fa2;margin-bottom:20px;}
+p{font-size:1.3rem;color:#f5d6e6;max-width:650px;line-height:1.7;}
 
 button{
-    margin-top:35px;
-    padding:15px 45px;
-    font-size:1.2rem;
+    margin-top:30px;
+    padding:14px 40px;
     border:none;
     border-radius:40px;
+    font-size:1.1rem;
     background:linear-gradient(135deg,#ff4d8d,#ff85b3);
-    color:#16000a;
     cursor:pointer;
-    box-shadow:0 10px 30px rgba(255,77,141,.4);
-    transition:.3s;
 }
 
-button:hover{transform:scale(1.1);}
-
-/* UÇUŞAN GÜLLER */
-.rose{
-    position:absolute;
-    width:70px;
-    height:70px;
-    transform-style:preserve-3d;
-    animation:float 6s infinite ease-in-out;
+/* 🌱 ALT BAHÇE */
+.garden{
+    position:fixed;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:35%;
+    pointer-events:none;
     z-index:1;
+}
+
+/* 🌹 ÇİÇEK */
+.flower{
+    position:absolute;
+    bottom:-60px;
+    width:40px;
+    height:40px;
+    animation:grow 6s infinite ease-in-out;
 }
 
 .petal{
     position:absolute;
-    width:40px;
-    height:40px;
+    width:18px;
+    height:18px;
     background:radial-gradient(circle,#ff9ecf,#c3003a);
     border-radius:50% 50% 50% 0;
 }
 
 .center{
     position:absolute;
-    width:20px;
-    height:20px;
-    background:radial-gradient(circle,#ffd6e8,#ff4d8d);
+    width:10px;
+    height:10px;
+    background:#ffd6e8;
     border-radius:50%;
-    top:25px;
-    left:25px;
-}
-
-.petal:nth-child(1){transform:rotateY(0deg) translateZ(18px);}
-.petal:nth-child(2){transform:rotateY(60deg) translateZ(18px);}
-.petal:nth-child(3){transform:rotateY(120deg) translateZ(18px);}
-.petal:nth-child(4){transform:rotateY(180deg) translateZ(18px);}
-.petal:nth-child(5){transform:rotateY(240deg) translateZ(18px);}
-.petal:nth-child(6){transform:rotateY(300deg) translateZ(18px);}
-
-/* BAHÇE */
-.garden{
-    position:fixed;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:35vh;
-    pointer-events:none;
-    overflow:hidden;
-    z-index:0;
-}
-
-.grow-rose{
-    position:absolute;
-    bottom:-80px;
-    width:50px;
-    height:50px;
-    transform-origin:bottom center;
-    animation:grow 7s ease-in-out infinite;
-}
-
-/* ANİMASYONLAR */
-@keyframes float{
-    0%{transform:translateY(0) rotateZ(0deg);}
-    50%{transform:translateY(-50px) rotateZ(180deg);}
-    100%{transform:translateY(0) rotateZ(360deg);}
+    top:15px;
+    left:15px;
 }
 
 @keyframes grow{
-    0%{transform:scale(0) translateY(80px); opacity:0;}
-    50%{transform:scale(1) translateY(0); opacity:1;}
-    100%{transform:scale(0) translateY(80px); opacity:0;}
-}
-
-@keyframes fade{
-    from{opacity:0; transform:translateY(30px);}
-    to{opacity:1; transform:translateY(0);}
+    0%{transform:translateY(0) scale(0);opacity:0;}
+    30%{opacity:1;}
+    100%{transform:translateY(-120px) scale(1);opacity:0;}
 }
 </style>
 </head>
 
 <body>
 
-<!-- BAHÇE -->
 <div class="garden" id="garden"></div>
 
-<!-- UÇUŞAN GÜLLER -->
-<script>
-for(let i=0;i<16;i++){
-    const r=document.createElement("div");
-    r.className="rose";
-    r.style.left=Math.random()*100+"%";
-    r.style.top=Math.random()*100+"%";
-    r.style.animationDuration=4+Math.random()*4+"s";
-
-    for(let j=0;j<6;j++){
-        const p=document.createElement("div");
-        p.className="petal";
-        r.appendChild(p);
-    }
-    const c=document.createElement("div");
-    c.className="center";
-    r.appendChild(c);
-
-    document.body.appendChild(r);
-}
-</script>
-
-<!-- SAHNELER -->
 <div class="scene active">
     <h1>Ogulgerek 🌹</h1>
-    <p>Bu karanlık gecede, kalbimde sadece sen varsın.</p>
-    <button onclick="next()">Devam et</button>
-</div>
-
-<div class="scene">
-    <h1>Bir süredir…</h1>
-    <p>Seni düşündüğümde içimde güller açıyor.</p>
+    <p>Bu karanlık gecede kalbim sadece sana açıyor.</p>
     <button onclick="next()">Devam</button>
 </div>
 
 <div class="scene">
-    <h1>Gerçek şu ki…</h1>
-    <p>Gülüşün gecemi aydınlatan tek ışık.</p>
+    <h1>Bir his…</h1>
+    <p>Sessiz ama derin, tıpkı gecede açan güller gibi.</p>
     <button onclick="next()">Devam</button>
 </div>
 
 <div class="scene">
-    <h1>Ogulgerek 💗</h1>
-    <p>Ben senden hoşlanıyorum.<br>Kalbim bunu saklayamadı.</p>
-    <button onclick="next()">Son</button>
-</div>
-
-<div class="scene">
-    <h1>🌹</h1>
-    <p>
-        Eğer istersen bu hikâyeyi birlikte yazabiliriz.<br>
-        İstemezsen bile, bu hislerim hep güzel kalacak.
-    </p>
+    <h1>💗</h1>
+    <p>Kalbim seni seçti.</p>
 </div>
 
 <script>
-/* SAHNE GEÇİŞ */
 let i=0;
-const s=document.querySelectorAll(".scene");
+const scenes=document.querySelectorAll(".scene");
 function next(){
-    s[i].classList.remove("active");
+    scenes[i].classList.remove("active");
     i++;
-    if(i<s.length) s[i].classList.add("active");
+    if(i<scenes.length) scenes[i].classList.add("active");
 }
 
-/* BAHÇEDEN GÜL ÇIKMA */
+/* ALT ÇİÇEKLER */
 const garden=document.getElementById("garden");
-
-function growRose(){
-    const rose=document.createElement("div");
-    rose.className="grow-rose";
-    rose.style.left=Math.random()*100+"%";
-    rose.style.animationDuration=6+Math.random()*4+"s";
-
-    for(let i=0;i<6;i++){
+setInterval(()=>{
+    const f=document.createElement("div");
+    f.className="flower";
+    f.style.left=Math.random()*100+"%";
+    for(let i=0;i<5;i++){
         const p=document.createElement("div");
         p.className="petal";
-        rose.appendChild(p);
+        p.style.transform=`rotate(${i*72}deg) translate(12px)`;
+        f.appendChild(p);
     }
     const c=document.createElement("div");
     c.className="center";
-    rose.appendChild(c);
-
-    garden.appendChild(rose);
-    setTimeout(()=>rose.remove(),10000);
-}
-
-setInterval(growRose,600);
+    f.appendChild(c);
+    garden.appendChild(f);
+    setTimeout(()=>f.remove(),6000);
+},700);
 </script>
 
 </body>
