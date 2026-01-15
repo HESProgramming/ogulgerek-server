@@ -15,20 +15,20 @@ html, body {
     font-family: Arial, sans-serif;
 }
 
-/* TAM EKRAN 3D ALANI */
+/* TAM EKRAN 3D SAHNE */
 #scene-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 }
 
-/* ÜSTTEKİ YAZI VE BUTONLAR */
+/* ÜST UI */
 #ui {
     position: fixed;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -39,22 +39,23 @@ html, body {
 
 #message {
     color: white;
-    font-size: 28px;
+    font-size: 32px;
     font-weight: bold;
-    text-shadow: 0px 0px 15px pink;
+    text-shadow: 0px 0px 20px pink;
     margin-bottom: 20px;
 }
 
+/* BUTONLAR */
 .buttons {
     pointer-events: auto;
 }
 
 button {
     font-size: 20px;
-    padding: 12px 25px;
+    padding: 12px 30px;
     margin: 10px;
     border: none;
-    border-radius: 25px;
+    border-radius: 30px;
     cursor: pointer;
     transition: 0.3s;
     font-weight: 600;
@@ -74,7 +75,7 @@ button:hover {
     transform: scale(1.1);
 }
 
-/* CEVAP MESAJI */
+/* CEVAP ALANI */
 #response {
     margin-top: 20px;
     font-size: 22px;
@@ -100,112 +101,129 @@ button:hover {
     <div id="response"></div>
 </div>
 
-<!-- THREE.JS (Gerçek 3D) -->
+<!-- THREE.JS -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.152/build/three.min.js"></script>
 
 <script>
+// ====== GERÇEK TAM EKRAN ======
+document.body.addEventListener("click", () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+    }
+});
+
+// ====== SAHNE ======
 const container = document.getElementById("scene-container");
 
-// SAHNE
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
+scene.background = new THREE.Color(0x050013);
+scene.fog = new THREE.Fog(0x050013, 5, 20);
 
 // KAMERA
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
-camera.position.z = 5;
+camera.position.z = 6;
 
 // RENDERER
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 container.appendChild(renderer.domElement);
 
-// IŞIKLAR
-const light = new THREE.PointLight(0xff66cc, 2, 50);
-light.position.set(2, 2, 2);
-scene.add(light);
+// IŞIKLAR (DAHA SİNEMATİK)
+const light1 = new THREE.PointLight(0xff66cc, 2, 50);
+light1.position.set(3, 3, 3);
+scene.add(light1);
+
+const light2 = new THREE.PointLight(0x66ccff, 1.5, 50);
+light2.position.set(-3, -2, 2);
+scene.add(light2);
 
 const ambient = new THREE.AmbientLight(0x222222);
 scene.add(ambient);
 
-// 3D KALP ŞEKLİ
+// 3D KALP (DAHA KALİTELİ)
 const heartShape = new THREE.Shape();
-
 heartShape.moveTo(0, 0.3);
 heartShape.bezierCurveTo(0.5, 0.8, 1.2, 0.6, 0, -0.8);
 heartShape.bezierCurveTo(-1.2, 0.6, -0.5, 0.8, 0, 0.3);
 
 const geometry = new THREE.ExtrudeGeometry(heartShape, {
-    depth: 0.5,
+    depth: 0.8,
     bevelEnabled: true,
-    bevelThickness: 0.1,
-    bevelSize: 0.05,
-    bevelSegments: 5
+    bevelThickness: 0.15,
+    bevelSize: 0.08,
+    bevelSegments: 8
 });
 
 const material = new THREE.MeshStandardMaterial({
     color: 0xff0044,
-    metalness: 0.6,
-    roughness: 0.2
+    metalness: 0.7,
+    roughness: 0.15,
+    emissive: 0x330011
 });
 
 const heart = new THREE.Mesh(geometry, material);
 scene.add(heart);
 
-// PARÇACIKLAR (CANLI EFEKT)
+// ====== PARÇACIKLAR (YILDIZ EFEKTİ) ======
 const particlesGeometry = new THREE.BufferGeometry();
-const particleCount = 3000;
+const particleCount = 4000;
 const positions = new Float32Array(particleCount * 3);
 
 for (let i = 0; i < particleCount * 3; i++) {
-    positions[i] = (Math.random() - 0.5) * 10;
+    positions[i] = (Math.random() - 0.5) * 20;
 }
 
 particlesGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
 
 const particlesMaterial = new THREE.PointsMaterial({
     size: 0.05,
-    color: 0xff99cc
+    transparent: true,
+    opacity: 0.8
 });
 
 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 scene.add(particles);
 
-// ANİMASYON
+// ====== ANİMASYON ======
+let time = 0;
+
 function animate() {
     requestAnimationFrame(animate);
+    time += 0.01;
 
+    // Kalp dönüş
     heart.rotation.y += 0.01;
-    heart.rotation.x += 0.005;
+    heart.rotation.x = Math.sin(time) * 0.1;
 
-    particles.rotation.y += 0.001;
-    particles.rotation.x += 0.001;
+    // Parçacıklar yavaş dönsün
+    particles.rotation.y += 0.0008;
+    particles.rotation.x += 0.0005;
+
+    // Hafif kamera hareketi
+    camera.position.x = Math.sin(time * 0.2) * 0.3;
+    camera.position.y = Math.cos(time * 0.15) * 0.2;
+    camera.lookAt(0, 0, 0);
 
     renderer.render(scene, camera);
 }
-
 animate();
 
-// PENCERE BOYUTU DEĞİŞİNCE
 window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// BUTON CEVAPLARI
+// ====== ŞİMDİLİK BASİT CEVAP (SONRA AI BAĞLAYACAĞIZ) ======
 function answer(choice) {
     let responseBox = document.getElementById("response");
 
     if (choice === "yes") {
         responseBox.innerHTML =
-        "🌹 Ogulgerek… bunu duyduğuma gerçekten çok sevindim. " +
-        "Seni tanımak, sohbet etmek ve güzel anılar biriktirmek isterim. " +
-        "Bence çok güzel bir başlangıç olabilir 💫";
+        "Harika! Şimdi daha özel bir deneyim geliyor… ✨";
     } else {
         responseBox.innerHTML =
-        "Anlıyorum… ama küçük bir şans verirsen " +
-        "seni şaşırtabileceğime inanıyorum. " +
-        "Belki sadece kısa bir sohbet? 😊";
+        "Anlıyorum… ama biraz daha kalır mısın? 💫";
     }
 }
 </script>
