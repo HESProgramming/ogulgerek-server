@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ogulgerek 💖</title>
+<title>Ogulgerek 🌹</title>
 
 <style>
 html, body {
@@ -88,10 +88,14 @@ button:hover {
 
 <body>
 
+<audio id="bg-music" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6d2b6a0c71.mp3?filename=romantic-piano-11248.mp3" type="audio/mpeg">
+</audio>
+
 <div id="scene-container"></div>
 
 <div id="ui">
-    <div id="message">Ogulgerek, benimle tanışmak ister misin? ✨</div>
+    <div id="message">Ogulgerek, benimle tanışmak ister misin? 🌹</div>
 
     <div class="buttons">
         <button id="yes" onclick="answer('yes')">EVET 💖</button>
@@ -101,15 +105,15 @@ button:hover {
     <div id="response"></div>
 </div>
 
-<!-- THREE.JS -->
 <script src="https://cdn.jsdelivr.net/npm/three@0.152/build/three.min.js"></script>
 
 <script>
-// ====== GERÇEK TAM EKRAN ======
+// ====== GERÇEK TAM EKRAN + MÜZİK ======
 document.body.addEventListener("click", () => {
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
     }
+    document.getElementById("bg-music").play();
 });
 
 // ====== SAHNE ======
@@ -128,8 +132,8 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 container.appendChild(renderer.domElement);
 
-// IŞIKLAR (DAHA SİNEMATİK)
-const light1 = new THREE.PointLight(0xff66cc, 2, 50);
+// IŞIKLAR
+const light1 = new THREE.PointLight(0xff66cc, 2.5, 60);
 light1.position.set(3, 3, 3);
 scene.add(light1);
 
@@ -140,49 +144,103 @@ scene.add(light2);
 const ambient = new THREE.AmbientLight(0x222222);
 scene.add(ambient);
 
-// 3D KALP (DAHA KALİTELİ)
-const heartShape = new THREE.Shape();
-heartShape.moveTo(0, 0.3);
-heartShape.bezierCurveTo(0.5, 0.8, 1.2, 0.6, 0, -0.8);
-heartShape.bezierCurveTo(-1.2, 0.6, -0.5, 0.8, 0, 0.3);
+// ====== 3D GÜL (KALP YERİNE) ======
+const roseGroup = new THREE.Group();
 
-const geometry = new THREE.ExtrudeGeometry(heartShape, {
-    depth: 0.8,
-    bevelEnabled: true,
-    bevelThickness: 0.15,
-    bevelSize: 0.08,
-    bevelSegments: 8
-});
-
-const material = new THREE.MeshStandardMaterial({
+// Gül merkezi (tomurcuk)
+const centerGeo = new THREE.SphereGeometry(0.4, 32, 32);
+const centerMat = new THREE.MeshStandardMaterial({
     color: 0xff0044,
-    metalness: 0.7,
-    roughness: 0.15,
+    metalness: 0.6,
+    roughness: 0.2,
     emissive: 0x330011
 });
+const center = new THREE.Mesh(centerGeo, centerMat);
+roseGroup.add(center);
 
-const heart = new THREE.Mesh(geometry, material);
-scene.add(heart);
+// Gül yaprakları (petaller - halka şeklinde)
+for (let i = 0; i < 10; i++) {
+    const petalGeo = new THREE.SphereGeometry(0.25, 16, 16);
+    const petalMat = new THREE.MeshStandardMaterial({
+        color: 0xff2255,
+        metalness: 0.5,
+        roughness: 0.3
+    });
 
-// ====== PARÇACIKLAR (YILDIZ EFEKTİ) ======
-const particlesGeometry = new THREE.BufferGeometry();
-const particleCount = 4000;
-const positions = new Float32Array(particleCount * 3);
+    const petal = new THREE.Mesh(petalGeo, petalMat);
 
-for (let i = 0; i < particleCount * 3; i++) {
-    positions[i] = (Math.random() - 0.5) * 20;
+    const angle = (i / 10) * Math.PI * 2;
+    petal.position.x = Math.cos(angle) * 0.6;
+    petal.position.y = Math.sin(angle) * 0.3;
+    petal.position.z = Math.sin(angle) * 0.2;
+
+    roseGroup.add(petal);
 }
 
-particlesGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+scene.add(roseGroup);
 
-const particlesMaterial = new THREE.PointsMaterial({
-    size: 0.05,
+// ====== A) UÇUŞAN GÜL YAPRAKLARI ======
+const petalGeom = new THREE.BufferGeometry();
+const petalCount = 1500;
+const petalPos = new Float32Array(petalCount * 3);
+
+for (let i = 0; i < petalCount * 3; i++) {
+    petalPos[i] = (Math.random() - 0.5) * 20;
+}
+
+petalGeom.setAttribute("position", new THREE.BufferAttribute(petalPos, 3));
+
+const petalMat = new THREE.PointsMaterial({
+    size: 0.06,
+    color: 0xff6699,
     transparent: true,
     opacity: 0.8
 });
 
-const particles = new THREE.Points(particlesGeometry, particlesMaterial);
-scene.add(particles);
+const petals = new THREE.Points(petalGeom, petalMat);
+scene.add(petals);
+
+// ====== D) YILDIZ KAYMASI ======
+let shootingStar = null;
+function createShootingStar() {
+    const geo = new THREE.SphereGeometry(0.05, 8, 8);
+    const mat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+    shootingStar = new THREE.Mesh(geo, mat);
+
+    shootingStar.position.set(-10, 5 + Math.random() * 3, -5);
+    scene.add(shootingStar);
+}
+setInterval(createShootingStar, 4000);
+
+// ====== C) PATLAMA EFEKTİ (BUTONA BASINCA) ======
+let explosionParticles = null;
+
+function triggerExplosion() {
+    const geo = new THREE.BufferGeometry();
+    const count = 2000;
+    const arr = new Float32Array(count * 3);
+
+    for (let i = 0; i < count * 3; i++) {
+        arr[i] = (Math.random() - 0.5) * 5;
+    }
+
+    geo.setAttribute("position", new THREE.BufferAttribute(arr, 3));
+
+    const mat = new THREE.PointsMaterial({
+        size: 0.05,
+        color: 0xff99cc,
+        transparent: true,
+        opacity: 1
+    });
+
+    explosionParticles = new THREE.Points(geo, mat);
+    scene.add(explosionParticles);
+
+    setTimeout(() => {
+        scene.remove(explosionParticles);
+        explosionParticles = null;
+    }, 1500);
+}
 
 // ====== ANİMASYON ======
 let time = 0;
@@ -191,13 +249,23 @@ function animate() {
     requestAnimationFrame(animate);
     time += 0.01;
 
-    // Kalp dönüş
-    heart.rotation.y += 0.01;
-    heart.rotation.x = Math.sin(time) * 0.1;
+    // Gül dönsün
+    roseGroup.rotation.y += 0.01;
+    roseGroup.rotation.x = Math.sin(time) * 0.05;
 
-    // Parçacıklar yavaş dönsün
-    particles.rotation.y += 0.0008;
-    particles.rotation.x += 0.0005;
+    // Yapraklar süzülsün
+    petals.rotation.y += 0.001;
+    petals.rotation.x += 0.0005;
+
+    // Yıldız kayması
+    if (shootingStar) {
+        shootingStar.position.x += 0.1;
+        shootingStar.position.y -= 0.05;
+        if (shootingStar.position.x > 10) {
+            scene.remove(shootingStar);
+            shootingStar = null;
+        }
+    }
 
     // Hafif kamera hareketi
     camera.position.x = Math.sin(time * 0.2) * 0.3;
@@ -214,16 +282,18 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ====== ŞİMDİLİK BASİT CEVAP (SONRA AI BAĞLAYACAĞIZ) ======
+// ====== BUTONLAR ======
 function answer(choice) {
     let responseBox = document.getElementById("response");
 
+    triggerExplosion(); // Butona basınca görsel patlama
+
     if (choice === "yes") {
         responseBox.innerHTML =
-        "Harika! Şimdi daha özel bir deneyim geliyor… ✨";
+        "Harika Ogulgerek… bu gül senin için açtı 🌹✨";
     } else {
         responseBox.innerHTML =
-        "Anlıyorum… ama biraz daha kalır mısın? 💫";
+        "Anlıyorum… ama bu gül biraz daha kalmanı istiyor 💫";
     }
 }
 </script>
