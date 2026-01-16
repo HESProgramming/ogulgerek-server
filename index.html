@@ -294,7 +294,7 @@ async function answer(choice) {
     responseBox.innerHTML = "Ogulgerek düşünüyor... 🌹";
 
     try {
-        const res = await fetch("https://SENIN-RENDER-LINKIN/ask-ai", {
+        const res = await fetch("https://ogulgerek-server-abc123.onrender.com/ask-ai", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
