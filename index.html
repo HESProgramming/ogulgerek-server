@@ -176,7 +176,6 @@ for (let i = 0; i < 10; i++) {
 
     roseGroup.add(petal);
 }
-
 scene.add(roseGroup);
 
 // ====== A) UÇUŞAN GÜL YAPRAKLARI ======
@@ -249,15 +248,12 @@ function animate() {
     requestAnimationFrame(animate);
     time += 0.01;
 
-    // Gül dönsün
     roseGroup.rotation.y += 0.01;
     roseGroup.rotation.x = Math.sin(time) * 0.05;
 
-    // Yapraklar süzülsün
     petals.rotation.y += 0.001;
     petals.rotation.x += 0.0005;
 
-    // Yıldız kayması
     if (shootingStar) {
         shootingStar.position.x += 0.1;
         shootingStar.position.y -= 0.05;
@@ -267,7 +263,6 @@ function animate() {
         }
     }
 
-    // Hafif kamera hareketi
     camera.position.x = Math.sin(time * 0.2) * 0.3;
     camera.position.y = Math.cos(time * 0.15) * 0.2;
     camera.lookAt(0, 0, 0);
@@ -282,18 +277,54 @@ window.addEventListener("resize", () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// ====== BUTONLAR ======
-function answer(choice) {
-    let responseBox = document.getElementById("response");
+// ====== AI İÇİN KONUŞMA GEÇMİŞİ ======
+let conversationHistory = [
+  "Soru: Ogulgerek, benimle tanışmak ister misin?"
+];
 
-    triggerExplosion(); // Butona basınca görsel patlama
+// ====== BUTONLAR (AI BAĞLANTILI) ======
+async function answer(choice) {
+    const responseBox = document.getElementById("response");
+    const messageBox = document.getElementById("message");
 
-    if (choice === "yes") {
+    triggerExplosion(); // Görsel patlama
+
+    conversationHistory.push(`Ogulgerek: ${choice.toUpperCase()}`);
+
+    responseBox.innerHTML = "Ogulgerek düşünüyor... 🌹";
+
+    try {
+        const res = await fetch("https://SENIN-RENDER-LINKIN/ask-ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                history: conversationHistory,
+                lastAnswer: choice
+            })
+        });
+
+        const data = await res.json();
+        const aiText = data.message;
+
+        if (aiText.includes("IKNA_OLDU")) {
+            messageBox.innerHTML = "✨ Ogulgerek, teşekkür ederim! 🌹";
+            responseBox.innerHTML = aiText.replace("IKNA_OLDU", "");
+
+            triggerExplosion();
+            setTimeout(triggerExplosion, 300);
+            setTimeout(triggerExplosion, 600);
+            return;
+        }
+
+        messageBox.innerHTML = aiText;
+        responseBox.innerHTML = "";
+
+        conversationHistory.push(`AI: ${aiText}`);
+
+    } catch (err) {
+        console.error(err);
         responseBox.innerHTML =
-        "Harika Ogulgerek… bu gül senin için açtı 🌹✨";
-    } else {
-        responseBox.innerHTML =
-        "Anlıyorum… ama bu gül biraz daha kalmanı istiyor 💫";
+          "Bağlantı hatası oldu… tekrar dener misin? 🌹";
     }
 }
 </script>
